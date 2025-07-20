@@ -1,4 +1,7 @@
 #backend for potential Acme user intial quiz by Aditya Sunkam
+#to interact simply run the code
+#recomend using services such as pycharm or google colab to run(if you want ease of access)
+#this needs UI obv, but I think it's a good start for backend
 QUESTIONS = {
     1: ("How would you describe your natural skin tone?", {
         'a': 'Very fair, pale white',
