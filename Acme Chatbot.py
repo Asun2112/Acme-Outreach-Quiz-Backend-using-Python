@@ -1,8 +1,6 @@
 #backend for potential Acme user intial quiz by Aditya Sunkam
-#to interact, simply run.
-#can try out in platforms such as pytorch(recomended) or in google colab for ease of use 
-questions = {
-    1: ("What is your natural skin color without sun exposure?", {
+QUESTIONS = {
+    1: ("How would you describe your natural skin tone?", {
         'a': 'Very fair, pale white',
         'b': 'Fair, ivory or beige',
         'c': 'Light brown or olive',
@@ -10,133 +8,157 @@ questions = {
         'e': 'Dark brown',
         'f': 'Deeply pigmented, very dark'
     }),
-    2: ("How does your skin react to sun exposure (without sunscreen)?", {
+    2: ("How does your skin react after sun exposure with no protection?", {
         'a': 'Always burns, never tans',
-        'b': 'Often burns, tans a little',
-        'c': 'Sometimes burns, tans gradually',
-        'd': 'Rarely burns, tans easily',
+        'b': 'Burns easily, tans a bit',
+        'c': 'Sometimes burns, tans slowly',
+        'd': 'Rarely burns, tans well',
         'e': 'Almost never burns, tans deeply',
         'f': 'Never burns'
     }),
-    3: ("Do you have visible pores, especially on your nose and forehead (T-zone)?", {
-        'a': 'Yes, a lot',
-        'b': 'A few',
-        'c': 'Rarely or none'
+    # --- Skin-moisture questions (3-10) ---
+    3: ("How visible are your facial pores (nose/forehead)?", {
+        'a': 'Very visible',
+        'b': 'Slightly visible',
+        'c': 'Hardly visible'
     }),
-    4: ("How often do you get pimples, blackheads, or acne?", {
+    4: ("How often do you experience acne or blackheads?", {
         'a': 'Rarely',
         'b': 'Occasionally',
         'c': 'Frequently'
     }),
-    5: ("Does your skin feel greasy or shiny by midday?", {
+    5: ("Does your skin look shiny or feel oily by midday?", {
         'a': 'Never',
         'b': 'Sometimes',
         'c': 'Often'
     }),
-    6: ("How does your skin feel in winter?", {
-        'a': 'Very dry and uncomfortable',
+    6: ("During cold, dry winters your skin feels…", {
+        'a': 'Tight, flaky, rough',
         'b': 'Slightly dry',
-        'c': 'Normal or still oily'
+        'c': 'Still normal or oily'
     }),
-    7: ("How does your skin feel in hot/humid weather?", {
-        'a': 'Uncomfortable dryness',
-        'b': 'Normal',
-        'c': 'Very oily, sticky'
+    7: ("In hot, humid weather your skin becomes…", {
+        'a': 'Drier or irritated',
+        'b': 'No big change',
+        'c': 'Oilier / sticky'
     }),
-    8: ("How often do you use moisturizer?", {
-        'a': 'Daily, or my skin feels very dry',
-        'b': 'Occasionally',
-        'c': 'Rarely, I feel I don’t need it'
-    }),
-    9: ("How would you describe your skin texture?", {
-        'a': 'Rough or flaky',
-        'b': 'Smooth',
-        'c': 'Slippery or oily'
-    }),
-    10: ("How sensitive is your skin to new products (burning, stinging, redness)?", {
-        'a': 'Very sensitive',
-        'b': 'Mild sensitivity',
-        'c': 'Rarely sensitive'
-    }),
-    11: ("How would you rate your average sleep per night?", {
-        'a': 'Less than 5 hours',
-        'b': '6–7 hours',
-        'c': '8 hours or more'
-    }),
-    12: ("Where do you spend most of your day?", {
-        'a': 'Mostly outdoors',
-        'b': 'A mix of indoor and outdoor',
-        'c': 'Mostly indoors'
-    }),
-    13: ("What type of climate do you live in most of the year?", {
-        'a': 'Hot and humid',
-        'b': 'Cold and dry',
-        'c': 'Moderate / mild'
-    }),
-    14: ("Does your skin change noticeably with the seasons?", {
-        'a': 'Yes, drastically',
-        'b': 'Slightly',
-        'c': 'No, it stays the same'
-    }),
-    15: ("How often do you use sun protection (sunscreen, hats)?", {
-        'a': 'Rarely',
+    8: ("How often do you NEED moisturizer to feel comfortable?", {
+        'a': 'Daily',
         'b': 'Sometimes',
-        'c': 'Always'
+        'c': 'Rarely / never'
+    }),
+    9: ("Which best describes your overall skin texture?", {
+        'a': 'Dry or flaky',
+        'b': 'Smooth',
+        'c': 'Greasy / slippery'
+    }),
+    10: ("When trying new products, your skin is…", {
+        'a': 'Very sensitive (burns/stings)',
+        'b': 'Mildly reactive',
+        'c': 'Rarely reacts'
+    }),
+    # --- Lifestyle / environment (11-15) ---
+    11: ("Average sleep per night?", {
+        'a': '<5 h', 'b': '6-7 h', 'c': '8 h+'
+    }),
+    12: ("Daily environment:", {
+        'a': 'Mostly outdoors', 'b': 'Mix indoor/outdoor', 'c': 'Mostly indoors'
+    }),
+    13: ("Usual climate:", {
+        'a': 'Hot & humid', 'b': 'Cold & dry', 'c': 'Mild / temperate'
+    }),
+    14: ("Seasonal skin change?", {
+        'a': 'Drastic', 'b': 'Slight', 'c': 'None'
+    }),
+    15: ("Sun-protection habit?", {
+        'a': 'Rarely', 'b': 'Sometimes', 'c': 'Always'
     })
 }
 
-# Scoring maps
-fitz_map      = {'a': 1,  'b': 2,  'c': 3,  'd': 4,  'e': 5,  'f': 6}
-moisture_map  = {'a': -1, 'b': 0,  'c': 1}
-climate_map   = {'a': 1,  'b': -1, 'c': 0}          # Q13 only
+# 2.  SCORING MAPS
+FITZ_MAP      = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6}
+MOISTURE_MAP  = {'a': -1, 'b': 0, 'c': 1}              # default
+CLIMATE_MAP   = {'a':  1, 'b': -1, 'c': 0}             # Q13 special
 
-#Avoding errors for invalid responses
-def get_answer(qnum: int, opts: dict[str, str]) -> str:
+# 3.  PRODUCT RECOMMENDATIONS  (by Fitzpatrick I-VI  ×  Dry/Normal/Oily)
+RECOMMEND = {
+    ("I", "Dry"):    "CeraVe Moisturizing Cream + Broad-Spectrum SPF 50",
+    ("II", "Dry"):   "CeraVe Moisturizing Cream + SPF 50",
+    ("III", "Dry"):  "La Roche-Posay Lipikar AP+M Balm",
+    ("IV", "Dry"):   "Vanicream Lotion + Tinted Mineral SPF",
+    ("V", "Dry"):    "Vaseline Cocoa Radiant Lotion",
+    ("VI", "Dry"):   "Vaseline Cocoa Radiant + EltaMD UV Clear Deep Tint SPF 46",
+    ("I", "Normal"): "Cetaphil Cleanser + Neutrogena Hydro Boost Gel",
+    ("II", "Normal"): "Cetaphil + Hydro Boost + Zinc-Oxide SPF 50",
+    ("III", "Normal"): "Hydro Boost Gel AM / light occlusive PM",
+    ("IV", "Normal"): "Hydro Boost + EltaMD UV Clear Tinted SPF 46",
+    ("V", "Normal"):  "Hydro Boost + EltaMD Deep Tint SPF 46",
+    ("VI", "Normal"): "EltaMD Deep Tint + Night Antioxidant Serum",
+    ("I", "Oily"):   "La Roche-Posay Effaclar Mat + Sal-Acid Cleanser",
+    ("II", "Oily"):  "Effaclar Mat AM + Hydro Boost PM",
+    ("III", "Oily"): "Effaclar Mat + Mineral SPF 30 + Adapalene 0.3 % PM",
+    ("IV", "Oily"):  "Effaclar Mat + Tinted Moisturizer SPF",
+    ("V", "Oily"):   "Effaclar Mat + Deep Tint SPF 46",
+    ("VI", "Oily"):  "Effaclar Mat + EltaMD Deep Tint + Azelaic Serum"
+}
+
+# 4.validated answer
+def prompt(qnum: int, text: str, opts: dict) -> str:
+    print(f"\nQ{qnum}. {text}")
+    for k, v in opts.items():
+        print(f"   {k}) {v}")
     while True:
-        reply = input("   Your choice: ").strip().lower()
-        if reply in opts:
-            return reply
-        print("  Invalid choice. Please enter one of:", "/".join(opts))
+        choice = input("   Your choice → ").strip().lower()
+        if choice in opts:
+            return choice
+        print("   ❌ Please enter one of:", "/".join(opts))
 
-# quiz decision loop
-scores = {"fitz": 0, "moisture": 0, "lifestyle": 0}
 
-print("Skin-Type & Lifestyle Quiz\n" + "-" * 40)
-for qnum, (qtext, options) in questions.items():
-    print(f"\nQ{qnum}. {qtext}")
-    for key, desc in options.items():
-        print(f"   {key}) {desc}")
-    ans = get_answer(qnum, options)
+# 5.  MAIN QUIZ LOOP(going thru the keys)
+def run_quiz():
+    scores = {"fitz": 0, "moist": 0, "life": 0}
 
-    # update scores
-    if qnum in (1, 2):
-        scores["fitz"] += fitz_map[ans]
-    elif 3 <= qnum <= 10:
-        scores["moisture"] += moisture_map[ans]
-    elif qnum == 13:          # climate question
-        scores["lifestyle"] += climate_map[ans]
-    else:
-        scores["lifestyle"] += moisture_map[ans]
+    for qnum, (qtext, optdict) in QUESTIONS.items():
+        ans = prompt(qnum, qtext, optdict)
 
-# Interpreting results
-fitz_type = f"Fitzpatrick Type {round(scores['fitz'] / 2)}"
-if scores["moisture"] > 2:
-    moisture_type = "Oily"
-elif scores["moisture"] < -2:
-    moisture_type = "Dry"
-else:
-    moisture_type = "Normal"
+        # --- scoring logic ---
+        if qnum in (1, 2):                       # Fitzpatrick
+            scores["fitz"] += FITZ_MAP[ans]
 
-if scores["lifestyle"] > 2:
-    lifestyle_tag = "Skin-friendly lifestyle"
-elif scores["lifestyle"] < -2:
-    lifestyle_tag = "Skin-stressing lifestyle"
-else:
-    lifestyle_tag = "Neutral lifestyle impact"
+        elif 3 <= qnum <= 10:                    # Moisture
+            scores["moist"] += MOISTURE_MAP[ans]
 
-#Display final results
-print("\n" + "-" * 40 + "\n🧾  Final Assessment")
-print(f"• {fitz_type}")
-print(f"• Skin-moisture profile: {moisture_type}")
-print(f"• Lifestyle impact:      {lifestyle_tag}")
-print("-" * 40)
+        elif qnum == 13:                         # Climate
+            scores["life"]  += CLIMATE_MAP[ans]
+
+        else:                                    # Other lifestyle q's
+            scores["life"]  += MOISTURE_MAP[ans]
+
+    # interpret results
+    fitz_avg  = round(scores["fitz"] / 2) or 1
+    fitz_type = ["I","II","III","IV","V","VI"][fitz_avg-1]
+
+    if   scores["moist"] > 2:  moist_type = "Oily"
+    elif scores["moist"] < -2: moist_type = "Dry"
+    else:                      moist_type = "Normal"
+
+    life_tag = ("Skin-friendly lifestyle" if scores["life"] > 2 else
+                "Skin-stressing lifestyle" if scores["life"] < -2 else
+                "Neutral lifestyle impact")
+
+    # recommendation lookup
+    product = RECOMMEND.get((fitz_type, moist_type),
+                            "No specific product match (use gentle basics)")
+
+    # final print summary
+    print("\n" + "="*45)
+    print("  YOUR SKIN PROFILE")
+    print(f"• Fitzpatrick Type:        {fitz_type}")
+    print(f"• Skin Moisture Profile:   {moist_type}")
+    print(f"• Lifestyle Impact:        {life_tag}")
+    print("• Suggested product:", product)
+    print("="*45)
+
+# 6.  Run if executed directly
+if __name__ == "__main__":
+    run_quiz()
