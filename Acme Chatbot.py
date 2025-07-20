@@ -1,4 +1,6 @@
 #backend for potential Acme user intial quiz by Aditya Sunkam
+#to interact, simply run.
+#can try out in platforms such as pytorch(recomended) or in google colab for ease of use 
 questions = {
     1: ("What is your natural skin color without sun exposure?", {
         'a': 'Very fair, pale white',
@@ -96,7 +98,7 @@ def get_answer(qnum: int, opts: dict[str, str]) -> str:
             return reply
         print("  Invalid choice. Please enter one of:", "/".join(opts))
 
-# Main quiz loop
+# quiz decision loop
 scores = {"fitz": 0, "moisture": 0, "lifestyle": 0}
 
 print("Skin-Type & Lifestyle Quiz\n" + "-" * 40)
