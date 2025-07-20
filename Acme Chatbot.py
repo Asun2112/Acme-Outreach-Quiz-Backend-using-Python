@@ -153,7 +153,7 @@ def run_quiz():
     product = RECOMMEND.get((fitz_type, moist_type),
                             "No specific product match (use gentle basics)")
 
-    # final print summary
+    # final print summary of user skin type
     print("\n" + "="*45)
     print("  YOUR SKIN PROFILE")
     print(f"• Fitzpatrick Type:        {fitz_type}")
@@ -162,6 +162,6 @@ def run_quiz():
     print("• Suggested product:", product)
     print("="*45)
 
-# 6.  Run if executed directly
+# 6.  Run.
 if __name__ == "__main__":
     run_quiz()
